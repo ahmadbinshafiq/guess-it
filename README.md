@@ -14,5 +14,5 @@ To install docker on ubuntu follow this [link](https://docs.docker.com/engine/in
 
 ### Frontend
 ```cd frontend```<br />
-```npm install```<br />
+```npm install --legacy-peer-deps```<br />
 ```npm start```
