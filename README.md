@@ -5,7 +5,6 @@ Using redis as database <br />
 
 ## Installation
 
-
 ### Backend
 Make sure you have docker installed on your system. <br />
 To install docker on ubuntu follow this [link](https://docs.docker.com/engine/install/ubuntu/). <br />
