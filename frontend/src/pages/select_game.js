@@ -1,10 +1,3 @@
-// create two clickable cards for each game
-// the cards should be clickable and take the user to the game page
-// the cards should have a title and a description
-// the cards should have a background image
-// the cards should have a button that says "Play"
-// the cards should be beautiful
-
 import { Card } from "@mui/material";
 import { CardActionArea } from "@mui/material";
 import { CardActions } from "@mui/material";
@@ -17,6 +10,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Table } from '@mui/material';
+import { TableContainer } from '@mui/material';
+import { TableHead, TableCell, TableBody, TableRow, Paper } from '@mui/material';
+
 
 const useStyles = makeStyles({
     root: {
@@ -42,12 +39,39 @@ const useStyles = makeStyles({
             color: "black",
         },
     },
+    table: {
+        backgroundColor: "black",
+        color: "white",
+        textTransform: "uppercase",
+        "&:hover": {
+            backgroundColor: "white",
+            color: "black",
+        },
+    },
 
 });
 
 const SelectGame = () => {
     const classes = useStyles();
     const history = useNavigate();
+
+    const [colorScore, setColorScore] = useState([]);
+    const [numberScore, setNumberScore] = useState([]);
+
+
+    useEffect(() => {
+        axios.post("/get_score", { email: localStorage.getItem("email") })
+            .then((res) => {
+                console.log(res.data);
+                setColorScore(res.data['color']);
+                setNumberScore(res.data['number']);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+
+
 
     return (
         <div style={{
@@ -64,7 +88,7 @@ const SelectGame = () => {
                 </Typography>
             </div>
 
-            <div style={{ flexWrap: "wrap", display: "flex", flexDirection: "row", justifyContent: "space-around" }}>
+            <div style={{ flexWrap: "inherit", display: "flex", flexDirection: "row", justifyContent: "center" }}>
                 <Card className={classes.root}>
                     <CardActionArea>
                         <CardMedia
@@ -85,7 +109,7 @@ const SelectGame = () => {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Button size="large" color="primary" className={classes.button} onClick={() => history('/num_game')}>
+                        <Button size="large" color="primary" className={classes.button} onClick={() => history('/num_game2')}>
                             Play
                         </Button>
                     </CardActions>
@@ -113,14 +137,57 @@ const SelectGame = () => {
                         </CardContent>
                     </CardActionArea>
                     <CardActions>
-                        <Button size="large" color="primary" className={classes.button} onClick={() => history('/color_game')}>
+                        <Button size="large" color="primary" className={classes.button} onClick={() => history('/color_game2')}>
                             Play
                         </Button>
                     </CardActions>
                 </Card>
 
-            </div>
-        </div>
+                <Card style={{ width: '40%' }}>
+                    <CardActionArea>
+                        <TableContainer component={Paper} style={{ overflow: "scroll", maxHeight: "30rem", }} align="center">
+                            <Table sx={{ minWidth: 150, maxHeight: 300 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow >
+                                        <TableCell align="center">Number Game Scores</TableCell>
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody >
+                                    {numberScore.map((score) => (
+                                        <TableRow key={score}>
+                                            <TableCell align="center">{score}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </CardActionArea>
+                </Card>
+                <Card style={{ width: '40%' }}>
+                    <CardActionArea>
+                        <TableContainer component={Paper} style={{ overflow: "scroll", maxHeight: "30rem", }} align="center">
+                            <Table sx={{ minWidth: 150, maxHeight: 300 }} aria-label="simple table" >
+                                <TableHead>
+                                    <TableRow >
+                                        <TableCell align="center">Color Game Scores</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody >
+                                    {colorScore.map((score) => (
+                                        <TableRow key={score}>
+                                            <TableCell align="center">{score}</TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </CardActionArea>
+                </Card>
+
+
+            </div >
+        </div >
     );
 }
 

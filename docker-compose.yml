@@ -8,8 +8,8 @@ services:
       - "6379:6379"
 
   game_server:
-    build: .
-    command: ./run_server.sh
+    build: backend
+    command: ./backend/run_server.sh
     volumes:
       - .:/code
     ports:
@@ -19,3 +19,16 @@ services:
       - REDIS_PORT=6379
     depends_on:
       - redis
+    ipc: host
+
+  game_frontend:
+    build: frontend
+    container_name: game_frontend
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    tty: true
+    depends_on:
+      - game_server
+    links:
+      - game_server

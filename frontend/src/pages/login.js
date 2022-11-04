@@ -45,9 +45,13 @@ export default function Login() {
             .then(res => {
                 console.log(res);
                 if (res.status === 200) {
+                    // save the email in local storage
+                    localStorage.setItem('email', email.value);
                     navigate('/select_game');
                 } else if (res.status === 201) {
-                    alert('Invalid email or password');
+                    alert('Invalid password');
+                } else if (res.status === 202) {
+                    alert('User not found');
                 } else {
                     alert('Something went wrong. Please check your email and password and try again.');
                 }
